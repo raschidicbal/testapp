@@ -44,3 +44,19 @@ jobs:
       - name: Push Docker image to Amazon ECR
         run: |
           docker push 443370701748.dkr.ecr.us-east-1.amazonaws.com/task/adiosai-app:latest
+          
+      # Step 7: Set up kubectl
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      # Step 8: Configure kubeconfig for cluster
+      - name: Configure kubeconfig
+        run: |
+          aws eks update-kubeconfig --region us-east-1 --name app-project-eks-cluster-eksCluster-016cff5
+
+      # Step 9: Deploy Helm chart
+      - name: Deploy Helm Chart
+        run: |
+          helm upgrade --install adiosai ./adiosai-chart
