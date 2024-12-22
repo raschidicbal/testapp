@@ -8,6 +8,7 @@ S3_BUCKET = os.getenv('S3_BUCKET')
 REGION = os.getenv('REGION')
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
 
 # Validate that all required environment variables are set
 if not all([S3_BUCKET, REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY]):
@@ -31,7 +32,7 @@ s3 = boto3.client(
 app = Flask(__name__)
 
 # Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://adiosai:password@adiosai-db:5432/adiosai'
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
