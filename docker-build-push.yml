@@ -1,0 +1,40 @@
+name: Build and Push Docker Image to ECR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Login to Amazon ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Step 3: Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t adiosai-app:latest .
+
+      # Step 4: Tag Docker image for ECR
+      - name: Tag Docker image for ECR
+        run: |
+          docker tag adiosai-app:latest ${{ secrets.ECR_REPOSITORY_URI }}:latest
+
+      # Step 5: Push Docker image to Amazon ECR
+      - name: Push Docker image to Amazon ECR
+        run: |
+          docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
+

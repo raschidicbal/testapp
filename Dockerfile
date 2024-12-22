@@ -1,6 +1,18 @@
 # Base image
 FROM python:3.10-slim
 
+# Declare build arguments
+ARG S3_BUCKET
+ARG REGION
+ARG AWS_ACCESS_KEY_ID
+ARG AWS_SECRET_ACCESS_KEY
+
+# Set environment variables
+ENV S3_BUCKET=$S3_BUCKET
+ENV REGION=$REGION
+ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
