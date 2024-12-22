@@ -7,37 +7,30 @@ on:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-22.04  # Specify the version to avoid the ubuntu-latest warning
+    runs-on: ubuntu-22.04
 
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Configure AWS credentials
-      - name: Configure AWS Credentials
+      - name: Configure AWS Credentials with OIDC
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: arn:aws:iam::443370701748:role/testappadmin
           aws-region: us-east-1
 
-      # Step 3: Login to Amazon ECR
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      # Step 4: Build Docker image
       - name: Build Docker image
         run: |
           docker build -t adiosai-app:latest .
 
-      # Step 5: Tag Docker image for ECR
       - name: Tag Docker image for ECR
         run: |
           docker tag adiosai-app:latest ${{ secrets.ECR_REPOSITORY_URI }}:latest
 
-      # Step 6: Push Docker image to Amazon ECR
       - name: Push Docker image to Amazon ECR
         run: |
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
