@@ -25,10 +25,7 @@ jobs:
           role-to-assume: arn:aws:iam::443370701748:role/testappadmin
           aws-region: us-east-1
 
-      # Step 3: Login to Amazon ECR
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+
       # Step 7: Set up kubectl
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
