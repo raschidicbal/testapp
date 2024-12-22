@@ -1,0 +1,25 @@
+services:
+  adiosai-db:
+    image: postgres:15
+    restart: always
+    environment:
+      - POSTGRES_USER=adiosai
+      - POSTGRES_PASSWORD=letmein123
+      - POSTGRES_DB=adiosai
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "adiosai"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  adiosai-app:
+    build:
+      context: .
+    environment:
+      - '5001:5000'
+    depends_on:
+      adiosai-db:
+        condition: service_healthy

@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: adiosai-db
+  name: adiosai-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: adiosai-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.28.0 (c4137012e)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/rashid-devops-hometask-default: "true"
+        io.kompose.service: adiosai-db
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: adiosai
+            - name: POSTGRES_PASSWORD
+              value: letmein123
+            - name: POSTGRES_USER
+              value: adiosai
+          image: postgres:15
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - adiosai
+            failureThreshold: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+          name: adiosai-db
+          ports:
+            - containerPort: 5432
+          resources: {}
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d/init.sql
+              name: adiosai-db-claim0
+      restartPolicy: Always
+      volumes:
+        - name: adiosai-db-claim0
+          persistentVolumeClaim:
+            claimName: adiosai-db-claim0
+status: {}
