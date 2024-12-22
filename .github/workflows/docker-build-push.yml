@@ -24,13 +24,12 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::443370701748:role/testappadmin
           aws-region: us-east-1
-
-
-      # Step 7: Set up kubectl
       - name: Set up kubectl
-        uses: azure/setup-kubectl@v3
+        uses: aws-actions/eks-setup@v1
         with:
-          version: 'latest'
+          cluster-name: app-project-eks-cluster-eksCluster-016cff5 # Replace with your EKS cluster name
+          region: us-east-1
+
 
       # Step 8: Configure kubeconfig for cluster
       - name: Configure kubeconfig
