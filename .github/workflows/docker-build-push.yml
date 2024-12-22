@@ -3,34 +3,44 @@ name: Build and Push Docker Image to ECR
 on:
   push:
     branches:
-      - main
+      - main  # Trigger workflow on push to the main branch
 
 jobs:
   build-and-push:
     runs-on: ubuntu-22.04
 
+    permissions:
+      id-token: write  # Enable OIDC token creation
+      contents: read   # Read access to the repository
+
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Step 2: Configure AWS credentials using OIDC
       - name: Configure AWS Credentials with OIDC
         uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: arn:aws:iam::443370701748:role/testappadmin
           aws-region: us-east-1
 
+      # Step 3: Login to Amazon ECR
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      # Step 4: Build Docker image
       - name: Build Docker image
         run: |
           docker build -t adiosai-app:latest .
 
+      # Step 5: Tag Docker image for ECR
       - name: Tag Docker image for ECR
         run: |
-          docker tag adiosai-app:latest ${{ secrets.ECR_REPOSITORY_URI }}:latest
+          docker tag adiosai-app:latest 443370701748.dkr.ecr.us-east-1.amazonaws.com/adiosai-app:latest
 
+      # Step 6: Push Docker image to Amazon ECR
       - name: Push Docker image to Amazon ECR
         run: |
-          docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
+          docker push 443370701748.dkr.ecr.us-east-1.amazonaws.com/adiosai-app:latest
