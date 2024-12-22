@@ -29,22 +29,6 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-
-      # Step 4: Build Docker image
-      - name: Build Docker image
-        run: |
-          docker build -t adiosai-app:latest .
-
-      # Step 5: Tag Docker image for ECR
-      - name: Tag Docker image for ECR
-        run: |
-          docker tag adiosai-app:latest 443370701748.dkr.ecr.us-east-1.amazonaws.com/task/adiosai-app:latest
-
-      # Step 6: Push Docker image to Amazon ECR
-      - name: Push Docker image to Amazon ECR
-        run: |
-          docker push 443370701748.dkr.ecr.us-east-1.amazonaws.com/task/adiosai-app:latest
-          
       # Step 7: Set up kubectl
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
@@ -59,4 +43,4 @@ jobs:
       # Step 9: Deploy Helm chart
       - name: Deploy Helm Chart
         run: |
-          helm upgrade --install adiosai ./adiosai-chart
+          kubectl get nodes
