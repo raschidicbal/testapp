@@ -1,39 +1,62 @@
 # Hometask for DevOps Engineer
 
-## Scenario
-- You’ve been hired as the DevOps Engineer @ [Adios.ai](https://adios.ai/), an online SaaS platform for helping busy professionals improve their email productivity.
-- You report to the Head of Engineering and you were tasked to prepare a PoC for migration of Adios.ai infrastructure from Heroku to AWS using EKS
+Setting Up the EKS Cluster Using Pulumi
+Follow these steps to set up the EKS cluster:
 
-## The task
-This repository contains a simple web-server application written in Python using [Flask](https://pypi.org/project/Flask/) framework. The application contains `/users` `GET` endpoint returning all records from `Users` table and `/upload` `POST` endpoint to upload files to S3 bucket
+Clone the Repository
+Clone this repository to your local machine and navigate to the infra directory:
 
-```
-GET http://127.0.0.1:5000/users
+bash
+Copy code
+git clone <repository-url>
+cd <repository-folder>/infra
+Preview and Deploy the EKS Cluster
+Ensure you have Pulumi installed. Then, run the following commands:
 
-[
-  {
-    "email": "alice@example.com",
-    "id": 1,
-    "name": "Alice"
-  },
-  {
-    "email": "bob@example.com",
-    "id": 2,
-    "name": "Bob"
-  }
-]
-```
+bash
+Copy code
+pulumi preview
+pulumi up
+pulumi preview: Displays the changes Pulumi will apply.
+pulumi up: Creates the EKS cluster based on the Pulumi configuration.
+Export Kubeconfig
+After the cluster is created, export the kubeconfig file to interact with the Kubernetes cluster:
 
-As part of this hometask, you need to implement:
-1. Define an infrastructure using [Pulumi](https://www.pulumi.com/) to deploy the application to an EKS cluster. Ensure the infrastructure supports rolling updates and high availability.
-2. Use [Helm](https://helm.sh/) or equivalent tools to deploy a sample web application to the Kubernetes cluster.
-3. Set up a CI/CD pipeline using GitHub Actions
-4. Provide a detailed README file that includes:
-   1. Setup and deployment instructions.
-   2. Any additional information about your solution
-5. Application must be publicly available
+bash
+Copy code
+pulumi stack output kubeconfig > kubeconfig.yaml
+export KUBECONFIG=$(pwd)/kubeconfig.yaml
+Install kubectl
+Ensure that kubectl is installed on your machine. You can install it using the following commands:
 
-Additional notes:
-1. Apply best practices, feel free to change application configuration where needed
+bash
+Copy code
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/$(uname | tr '[:upper:]' '[:lower:]')/amd64/kubectl"
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
+Verify the installation:
 
-Have fun! :)
+bash
+Copy code
+kubectl version --client
+Configure AWS CLI
+Ensure that the AWS CLI is installed and configured with credentials that have the necessary permissions:
+
+bash
+Copy code
+aws configure
+Enter the following information when prompted:
+
+AWS Access Key
+AWS Secret Access Key
+Default region (e.g., us-east-1)
+Output format (e.g., json)
+Verify the Cluster
+Use kubectl to verify that your cluster is up and running:
+
+bash
+Copy code
+kubectl get nodes
+This command should return a list of nodes in your EKS cluster.
+
+By following these steps, you’ll have an EKS cluster set up and ready for deployments.
