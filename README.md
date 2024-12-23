@@ -8,3 +8,12 @@ Start by cloning the GitHub repository to your local machine.
 ```bash
 git clone <repository-url>
 cd <repository-folder>/infra
+```
+
+Step 2: Preview and Deploy the EKS Cluster
+Use Pulumi to preview and deploy the infrastructure. Ensure Pulumi is installed. You can install Pulumi by following the instructions here.
+
+```bash
+pulumi preview  # This will show the changes Pulumi will make.
+pulumi up       # This command applies the changes and creates the EKS cluster.
+```
