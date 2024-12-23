@@ -1,62 +1,35 @@
-# Hometask for DevOps Engineer
-
-Setting Up the EKS Cluster Using Pulumi
-Follow these steps to set up the EKS cluster:
-
-Clone the Repository
-Clone this repository to your local machine and navigate to the infra directory:
-
-bash
-Copy code
+# Step 1: Clone the Repository
 git clone <repository-url>
 cd <repository-folder>/infra
-Preview and Deploy the EKS Cluster
-Ensure you have Pulumi installed. Then, run the following commands:
 
-bash
-Copy code
-pulumi preview
-pulumi up
-pulumi preview: Displays the changes Pulumi will apply.
-pulumi up: Creates the EKS cluster based on the Pulumi configuration.
-Export Kubeconfig
-After the cluster is created, export the kubeconfig file to interact with the Kubernetes cluster:
+# Step 2: Preview and Deploy the EKS Cluster
+# Ensure you have Pulumi installed (https://www.pulumi.com/docs/get-started/install/)
+pulumi preview  # View changes Pulumi will make
+pulumi up       # Apply changes to create the EKS cluster
 
-bash
-Copy code
+# Note: The EKS cluster is configured to use two subnets across two availability zones, 
+# ensuring high availability and fault tolerance.
+
+# Step 3: Export Kubeconfig
 pulumi stack output kubeconfig > kubeconfig.yaml
 export KUBECONFIG=$(pwd)/kubeconfig.yaml
-Install kubectl
-Ensure that kubectl is installed on your machine. You can install it using the following commands:
 
-bash
-Copy code
+# Step 4: Install kubectl
+# Download and install the kubectl binary for your system
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/$(uname | tr '[:upper:]' '[:lower:]')/amd64/kubectl"
 chmod +x kubectl
 sudo mv kubectl /usr/local/bin/
-Verify the installation:
+kubectl version --client  # Verify installation
 
-bash
-Copy code
-kubectl version --client
-Configure AWS CLI
-Ensure that the AWS CLI is installed and configured with credentials that have the necessary permissions:
-
-bash
-Copy code
+# Step 5: Configure AWS CLI
+# Install and configure AWS CLI with credentials having required permissions
 aws configure
-Enter the following information when prompted:
+# Provide the following details when prompted:
+# AWS Access Key: <your-access-key>
+# AWS Secret Access Key: <your-secret-access-key>
+# Default region: us-east-1 (or your preferred region)
+# Output format: json
 
-AWS Access Key
-AWS Secret Access Key
-Default region (e.g., us-east-1)
-Output format (e.g., json)
-Verify the Cluster
-Use kubectl to verify that your cluster is up and running:
-
-bash
-Copy code
+# Step 6: Verify the Cluster
+# Ensure the cluster is running and nodes are available
 kubectl get nodes
-This command should return a list of nodes in your EKS cluster.
-
-By following these steps, you’ll have an EKS cluster set up and ready for deployments.
